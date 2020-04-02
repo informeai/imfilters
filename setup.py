@@ -11,6 +11,7 @@ setuptools.setup(
     description="Pacote para tratamento e aplicação de filtros em imagens.",
     long_description=long_description,
     long_description_content_type="text/markdown",
+    install_requires=['Pillow'],
     url="https://github.com/informeai/imfilters",
     packages=setuptools.find_packages(),
     classifiers=[
