@@ -1,2 +1,3 @@
 # Imfilters
-## Aplique filtros em suas imagens na velocidade python.
+## Apply filters to your images at python speed.
+Clone the repository and use it at will.
