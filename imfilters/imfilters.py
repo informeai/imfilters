@@ -978,3 +978,129 @@ class IMSharpen:
         Method responsible for viewing the image.
         '''
         self.new_img.show()
+
+class IMLumios:
+    '''
+    Class responsible for applying lumens filters.
+    : param image: Image to be applied to the filter.
+    : param color: Color to be applied. Options -> red, blue, green.
+    : param percent: Quantity of color percentage.
+    '''
+
+    def __init__(self, image:str, color:str='blue', percent:float=0.1):
+        self.image = image
+
+        im = Image.open(self.image)
+
+        self.new_img = Image.new('RGB',im.size)
+
+        width, height = im.size
+
+        percent *=10
+        if percent > 10:
+            l = 10
+        elif percent < 0:
+            l = 0
+        else:
+            l = percent
+
+        for x in range(width):
+            for y in range(height):
+
+                px = im.getpixel((x,y))
+
+                red = px[0]
+                green = px[1]
+                blue = px[2]
+
+                med = (red + green + blue) // 3
+                
+                if color == 'blue':
+                    r = med
+                    g = med
+                    b = blue + ((255 - blue) // 10) * int(l)
+                elif color == 'red':
+                    r = red + ((255 - red) // 10) * int(l)
+                    g = med
+                    b = med
+                elif color == 'green':
+                    r = med 
+                    g = green + ((255 - green) // 10) * int(l)
+                    b = med
+                else:
+                    print(f'Color -> {color} not applicable.')
+                    exit(0)
+                self.new_img.putpixel((x,y), (r, g, b))
+
+    def save(self, path:str):
+        '''
+        Method responsible for saving the image with filter.
+        '''
+        self.new_img.save(path)
+
+    def show(self):
+        '''
+        Method responsible for showing the image with filter.
+        '''
+        self.new_img.show()
+
+class IMPixelated:
+    '''
+    Class responsible for applying pixelated filters.
+    : param image: Image to be applied to the filter.
+    : param scale: Scale of pixel diameter.
+    '''
+
+    def __init__(self, image:str, scale:int=3):
+        self.image = image
+        self.scale = scale
+
+        im = Image.open(self.image)
+        im = im.convert('RGBA')
+
+        new_img = Image.new('RGBA',im.size, (0,0,0,0))
+
+        draw = ImageDraw.Draw(new_img)
+
+        width, height = im.size
+
+        self.scale = 10
+
+        if self.scale > 10:
+            self.scale = 10
+        elif self.scale < 3:
+            self.scale = 3
+
+
+        for x in range(width):
+            for y in range(height):
+
+                px = im.getpixel((x,y))
+
+
+                red = px[0] 
+                green = px[1] 
+                blue = px[2] 
+
+                r = int(red)
+                g = int(green)
+                b = int(blue)
+
+                if x % self.scale == 0:
+                    draw.rectangle(((x + 5,y + 5),(x + 10, y + 10)), fill=(r, g, b, 500))
+
+        im = Image.alpha_composite(im,new_img)
+
+        self.new_im = im.convert('RGB')
+
+    def save(self, path:str):
+        '''
+        Method responsible for saving the image with filter.
+        '''
+        self.new_im.save(path)
+
+    def show(self):
+        '''
+        Method responsible for showing the image with filter.
+        '''
+        self.new_im.show()
