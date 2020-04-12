@@ -8,7 +8,7 @@
 
 import math
 import os
-from random import random
+from random import randint, random
 
 from PIL import Image, ImageFilter, ImageGrab, ImageDraw
 
@@ -1092,6 +1092,186 @@ class IMPixelated:
         im = Image.alpha_composite(im,new_img)
 
         self.new_im = im.convert('RGB')
+
+    def save(self, path:str):
+        '''
+        Method responsible for saving the image with filter.
+        '''
+        self.new_im.save(path)
+
+    def show(self):
+        '''
+        Method responsible for showing the image with filter.
+        '''
+        self.new_im.show()
+
+class IMRectangle:
+    '''
+    Class responsible for applying rectangle filters.
+    :param image: Image to be applied to the filter.
+    :param color: Color of RGBA format for aply in rectangle.
+    :param scale: Scale for rectangles.
+    :param rand: Apply random color.
+    :param dist: Distance of rectangles.
+    '''
+
+    def __init__(self, image:str, color:tuple=(0,0,0,1), scale:int=3, rand:bool=False, dist:int=20):
+        self.image = image
+        self.color = color
+        self.scale = scale
+        self.rand = rand
+        self.dist = dist
+
+        self.im = Image.open(self.image)
+        self.im = self.im.convert('RGBA')
+
+        self.new_img = Image.new('RGBA',self.im.size, (0,0,0,0))
+
+        draw = ImageDraw.Draw(self.new_img)
+
+        width, height = self.im.size
+
+        r = self.color[0]
+        g = self.color[1]
+        b = self.color[2]
+        a = self.color[3]
+        if a > 1:
+            a = 1
+        elif a < 0:
+            a = 0
+        else:
+            a = int(a * 1000)
+        self.rgba = (r, g, b, a)
+
+        for x in range(0,width, randint(2,self.dist//2)):
+            for y in range(0, height, randint(self.dist//2,self.dist * 2)):
+
+                r = randint(1,3)
+
+                if self.rand:
+                    draw.rectangle(((x,y),(x + self.scale * r, y + self.scale )), (randint(0,255), randint(0,255), randint(0,255), randint(100,1000))) 
+                else:
+                    draw.rectangle(((x,y),(x + self.scale * r, y + self.scale )), self.rgba)    
+
+                
+
+
+        self.im = Image.alpha_composite(self.im,self.new_img)
+        self.new_img = self.im.convert('RGB')
+
+    def save(self,path:str):
+        '''
+        Method responsible for saving the image with filter.
+        '''
+        self.new_img.save(path)
+
+    def show(self):
+        '''
+        Method responsible for showing the image with filter.
+        '''
+        self.new_img.show()
+
+class IMPredominance:
+    '''
+    Class responsible for applying predominance filter of color.
+    :param image: Image to be applied to the filter.
+    :param color: Color for predominance. Ex: red, blue, green, yellow, orange, purple, ciano, pink.
+    '''
+
+    def __init__(self, image:str, color:str='red'):
+        self.image = image
+        self.color = color
+        self.im = Image.open(self.image)
+
+        self.new_im = Image.new('RGB', self.im.size)
+
+        width, height = self.im.size
+
+        for x in range(width):
+            for y in range(height):
+
+                px = self.im.getpixel((x,y))
+
+                red = px[0]
+                green = px[1]
+                blue = px[2]
+
+                med = (red + green + blue) // 3
+
+                if self.color == 'red':
+                    if red > green and red > blue:
+                        r = red
+                        g = green
+                        b = blue
+                    else:
+                        r = med
+                        g = med
+                        b = med
+                elif self.color == 'blue':
+                    if blue > green and blue > red:
+                        r = red
+                        g = green
+                        b = blue
+                    else:
+                        r = med
+                        g = med
+                        b = med
+                elif self.color == 'green':
+                    if green > red and green > blue:
+                        r = red
+                        g = green
+                        b = blue
+                    else:
+                        r = med
+                        g = med
+                        b = med
+                elif self.color == 'yellow':
+                    if red > blue and green > blue and green > 200:
+                        r = red
+                        g = green
+                        b = blue
+                    else:
+                        r = med
+                        g = med
+                        b = med
+                elif self.color == 'ciano':
+                    if blue > red and green > blue:
+                        r = red
+                        g = green
+                        b = blue
+                    else:
+                        r = med
+                        g = med
+                        b = med
+                elif self.color == 'purple':
+                    if blue > red and blue > green and red > 100 and red < 200:
+                        r = red
+                        g = green
+                        b = blue
+                    else:
+                        r = med
+                        g = med
+                        b = med
+                elif self.color == 'pink':
+                    if red > green and red > blue and blue > green and blue > 100:
+                        r = red
+                        g = green
+                        b = blue
+                    else:
+                        r = med
+                        g = med
+                        b = med
+                elif self.color == 'orange':
+                    if red > green and red > blue and green > blue and green > 50 and green < 150:
+                        r = red
+                        g = green
+                        b = blue
+                    else:
+                        r = med
+                        g = med
+                        b = med
+
+                self.new_im.putpixel((x,y), (r, g, b))
 
     def save(self, path:str):
         '''
