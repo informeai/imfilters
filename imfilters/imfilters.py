@@ -1284,3 +1284,144 @@ class IMPredominance:
         Method responsible for showing the image with filter.
         '''
         self.new_im.show()
+
+class IMLumBlue:
+
+    '''
+    Class responsible for applying filter lumius blue.
+    :param image: Image to be applied to the filter.
+    '''
+
+    def __init__(self, image:str):
+        self.image = image
+        self.im = Image.open(self.image)
+
+        self.new_im = Image.new('RGB', self.im.size)
+
+        width, height = self.im.size
+
+        for x in range(width):
+            for y in range(height):
+
+                px = self.im.getpixel((x,y))
+                
+                red = px[0]
+                green = px[1]
+                blue = px[2]
+
+                if blue < green and blue < red:
+                    r = red
+                    g = green
+                    b = blue + int((255 - blue) * 0.2)
+                else:
+                    r = red
+                    g = green
+                    b = blue
+
+                self.new_im.putpixel((x,y), (r, g, b))
+
+    def save(self, path:str):
+        '''
+        Method responsible for saving the image with filter.
+        '''
+        self.new_im.save(path)
+
+    def show(self):
+        '''
+        Method responsible for showing the image with filter.
+        '''
+        self.new_im.show()
+
+class IMLumRed:
+
+    '''
+    Class responsible for applying filter lumius red.
+    :param image: Image to be applied to the filter.
+    '''
+
+    def __init__(self, image:str):
+        self.image = image
+        self.im = Image.open(self.image)
+
+        self.new_im = Image.new('RGB', self.im.size)
+
+        width, height = self.im.size
+
+        for x in range(width):
+            for y in range(height):
+
+                px = self.im.getpixel((x,y))
+                
+                red = px[0]
+                green = px[1]
+                blue = px[2]
+
+                if red < green and red < blue:
+                    r = red + int((255 - red) * 0.2)
+                    g = green
+                    b = blue 
+                else:
+                    r = red
+                    g = green
+                    b = blue
+
+                self.new_im.putpixel((x,y), (r, g, b))
+
+    def save(self, path:str):
+        '''
+        Method responsible for saving the image with filter.
+        '''
+        self.new_im.save(path)
+
+    def show(self):
+        '''
+        Method responsible for showing the image with filter.
+        '''
+        self.new_im.show()
+
+class IMLumGreen:
+
+    '''
+    Class responsible for applying filter lumius green.
+    :param image: Image to be applied to the filter.
+    '''
+
+    def __init__(self, image:str):
+        self.image = image
+        self.im = Image.open(self.image)
+
+        self.new_im = Image.new('RGB', self.im.size)
+
+        width, height = self.im.size
+
+        for x in range(width):
+            for y in range(height):
+
+                px = self.im.getpixel((x,y))
+                
+                red = px[0]
+                green = px[1]
+                blue = px[2]
+
+                if green < red and green < blue:
+                    r = red 
+                    g = green + int((255 - green) * 0.2)
+                    b = blue 
+                else:
+                    r = red
+                    g = green
+                    b = blue
+
+                self.new_im.putpixel((x,y), (r, g, b))
+
+    def save(self, path:str):
+        '''
+        Method responsible for saving the image with filter.
+        '''
+        self.new_im.save(path)
+
+    def show(self):
+        '''
+        Method responsible for showing the image with filter.
+        '''
+        self.new_im.show()
