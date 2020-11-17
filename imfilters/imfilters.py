@@ -118,7 +118,6 @@ class IMContrast:
         '''
         self.new_img.show()
 
-
 class IMSaturation:
     '''
     Class responsible for applying the saturation adjustment filter.
@@ -233,13 +232,11 @@ class IMVibrance:
         '''
         self.new_img.show()
 
-
-
 class IMGray:
     '''
     Class responsible for applying gray scale filter.
     : param image: Path of the file to be opened
-    : param mode: File output mode. Ex: 'normal' -> Balanced gray scale, - 'optimize' -> Optimized gray scale.
+    : param mode: File output mode. Ex: 'normal' -> Balanced gray scale, - 'optimize' -> Optimized gray scale.
     '''
 
     def __init__(self, image:str, mode:str=None):
@@ -286,8 +283,8 @@ class IMGray:
 class IMBoxBlur:
     '''
     Class responsible for applying blur filter in box.
-    : param image: Image to be applied to the filter.
-    : param bl: Size of the blur box. Ex: bl = 5 -> box: 5X5.
+    : param image: Image to be applied to the filter.
+    : param bl: Size of the blur box. Ex: bl = 5 -> box: 5X5.
     '''
 
     def __init__(self, image:str, bl:int=None):
@@ -311,12 +308,11 @@ class IMBoxBlur:
         '''
         self.im_final.show()
 
-
 class IMGaussBlur:
     '''
     Class responsible for applying Gaussian filter.
-    :param image: Image to be applied to the filter.
-    :param radius: Blur radius.
+    :param image: Image to be applied to the filter.
+    :param radius: Blur radius.
     '''
 
     def __init__(self, image:str, radius:int=2):
@@ -345,10 +341,10 @@ class IMGaussBlur:
 class IMUnsharpMask:
     '''
     Class responsible for applying sharpness mask filter.
-    :param image: Image to be applied to the filter.
-    :param radius: Radius of the maskara.
-    :param percent: Sharpness percentage.
-    :param limit: Brightness limit.
+    :param image: Image to be applied to the filter.
+    :param radius: Radius of the maskara.
+    :param percent: Sharpness percentage.
+    :param limit: Brightness limit.
     '''
 
     def __init__(self, image:str, radius=2, percent=50, limit=3):
@@ -376,7 +372,7 @@ class IMUnsharpMask:
 class IMRFilters:
     '''
     Base class that provides quick filters.
-    :param image: Image to be applied to the filter.
+    :param image: Image to be applied to the filter.
     '''
 
     def __init__(self, image:str):
@@ -423,7 +419,6 @@ class IMRFilters:
     def _smooth_more(self, img):
         return img.filter(ImageFilter.SMOOTH_MORE)
 
-    
 class IMLuminance:
     '''
     Class responsible for return luminance.
@@ -433,7 +428,6 @@ class IMLuminance:
         self.rgb = rgb
         self.lumin = int((0.299 * self.rgb[0]) + (0.587 * self.rgb[1]) + (0.114 * self.rgb[2]))
     
-
 class IMRgbToHsv:
     '''
     Class responsible for convert rgb to hsv.
@@ -514,7 +508,6 @@ class IMRgbToHsl:
 
         self.hsl = (h, s, l)
 
-
 class IMHsvToRgb:
     '''
     Class responsible for convert hsv to rgb.
@@ -560,8 +553,6 @@ class IMHsvToRgb:
         blue = math.floor(b * 255)
 
         self.rgb = (red, green, blue)
-
-
 
 class IMSepia:
     '''
@@ -895,8 +886,6 @@ class IMSoftSat:
         self.img_sepia.save(path)
         self.img_satu = IMSaturation(path, -30)
         self.img_satu.save(path)
-
-
 
 class IMSolarize:
     '''
@@ -1403,6 +1392,8 @@ class IMLumGreen:
                 green = px[1]
                 blue = px[2]
 
+                
+
                 if green < red and green < blue:
                     r = red 
                     g = green + int((255 - green) * 0.2)
@@ -1425,3 +1416,506 @@ class IMLumGreen:
         Method responsible for showing the image with filter.
         '''
         self.new_im.show()
+
+class IMHueRotate:
+    '''
+    Class responsible for applying filter hue rotate.
+    :param image: Image to be applied to the filter.
+    :param degreeus: degreeus to be applied for rotate hue
+    '''
+    def __init__(self, image:str, degreeus:int = 50):
+        self.image = image
+        self.im = Image.open(self.image)
+
+        self.new_im = Image.new('RGB', self.im.size)
+
+        self.degreeus = degreeus
+
+        if self.degreeus < 0:
+            self.degreeus = 0
+        elif self.degreeus > 360:
+            self.degreeus = 360
+        else:
+            self.degreeus = degreeus
+
+        u = math.cos(degreeus * math.pi / 180)
+        w = math.sin(degreeus * math.pi / 180)
+
+        width, height = self.im.size
+
+        for x in range(width):
+            for y in range(height):
+
+                px = self.im.getpixel((x,y))
+                
+                red = px[0]
+                green = px[1]
+                blue = px[2]
+
+                
+                r = int(((0.299 + 0.701 * u + 0.168 * w) * red + (0.587 - 0.587 * u + 0.330 * w) * green + (0.114 - 0.114 * u - 0.497 * w) * blue))
+                g = int(((0.299 - 0.299 * u - 0.328 * w) * red + (0.587 + 0.413 * u + 0.035 * w) * green + (0.114 - 0.114 * u + 0.292 * w) * blue))
+                b = int(((0.299 - 0.3 * u + 1.25 * w) * red + (0.587 - 0.588 * u - 1.05 * w) * green + (0.114 + 0.886 * u - 0.203 * w) * blue))
+                self.new_im.putpixel((x,y),(r,g,b))
+        
+
+    def save(self, path:str):
+        '''
+        Method responsible for saving the image with filter.
+        '''
+        self.new_im.save(path)
+
+    def show(self):
+        '''
+        Method responsible for showing the image with filter.
+        '''
+        self.new_im.show()
+
+class IMHueSaturation:
+    '''
+    Class responsible for applying filter hue saturation.
+    :param image: Image to be applied to the filter.
+    :param degreeus: degreeus to be applied for saturaion hue
+    '''
+    def __init__(self, image:str, adjust:int = 10):
+        self.image = image
+        self.im = Image.open(self.image)
+
+        self.new_im = Image.new('RGB', self.im.size)
+
+        self.adjust = adjust
+        width, height = self.im.size
+
+        for x in range(width):
+            for y in range(height):
+
+                px = self.im.getpixel((x,y))
+                
+                red = px[0]
+                green = px[1]
+                blue = px[2]
+
+                hsv = IMRgbToHsv((red,green,blue)).hsv
+                hr = hsv[0]
+                hg = hsv[1] * self.adjust
+                hb = hsv[2]
+                
+                rgb = IMHsvToRgb((hr,hg,hb)).rgb
+                r = rgb[0]
+                g = rgb[1]
+                b = rgb[2]
+                self.new_im.putpixel((x,y),(r,g,b))
+        
+
+    def save(self, path:str):
+        '''
+        Method responsible for saving the image with filter.
+        '''
+        self.new_im.save(path)
+
+    def show(self):
+        '''
+        Method responsible for showing the image with filter.
+        '''
+        self.new_im.show()
+
+class IMOverlay:
+    '''
+    Class responsible for applying filter overlay.
+    :param image: Image to be applied to the filter.
+    :param red: adjust color red.
+    :param green: adjust color green.
+    :param blue: adjust color blue.
+    :param scale: scale of adjust overlay.
+    '''
+    def __init__(self, image:str, red:int=50, green:int=50, blue:int=50, scale:int=10):
+        self.image = image
+        self.red = red
+        self.green = green
+        self.blue = blue
+        self.scale = scale
+
+        self.im = Image.open(self.image)
+
+        self.new_im = Image.new('RGB', self.im.size)
+
+        
+        width, height = self.im.size
+
+        for x in range(width):
+            for y in range(height):
+
+                px = self.im.getpixel((x,y))
+                
+                p_red = px[0]
+                p_green = px[1]
+                p_blue = px[2]
+
+                r = int((p_red - (p_red - self.red) * self.scale))
+                g = int((p_green - (p_green - self.green) * self.scale))
+                b = int((p_blue - (p_blue - self.blue) * self.scale))
+
+                self.new_im.putpixel((x,y),(r,g,b))
+
+
+    def save(self, path:str):
+        '''
+        Method responsible for saving the image with filter.
+        '''
+        self.new_im.save(path)
+
+    def show(self):
+        '''
+        Method responsible for showing the image with filter.
+        '''
+        self.new_im.show()
+
+class IMAditiveColors:
+
+    '''
+    Class responsible for applying filter aditive colors.
+    :param image: Image to be applied to the filter.
+    :param red: adjust color red.
+    :param green: adjust color green.
+    :param blue: adjust color blue.
+    '''
+
+    def __init__(self, image:str, red:int=5, green:int=5, blue:int=5):
+        self.image = image
+        self.red = red
+        self.green = green
+        self.blue = blue
+        
+
+        self.im = Image.open(self.image)
+
+        self.new_im = Image.new('RGB', self.im.size)
+
+        
+        width, height = self.im.size
+
+        for x in range(width):
+            for y in range(height):
+
+                px = self.im.getpixel((x,y))
+                
+                p_red = px[0]
+                p_green = px[1]
+                p_blue = px[2]
+
+                r = int(p_red + self.red)
+                g = int(p_green + self.green)
+                b = int(p_blue + self.blue)
+
+        
+        
+                self.new_im.putpixel((x,y),(r,g,b))
+
+
+    def save(self, path:str):
+        '''
+        Method responsible for saving the image with filter.
+        '''
+        self.new_im.save(path)
+
+    def show(self):
+        '''
+        Method responsible for showing the image with filter.
+        '''
+        self.new_im.show()
+
+class IMRgbScale:
+    '''
+    Class responsible for applying filter scale rgb colors.
+    :param image: Image to be applied to the filter.
+    :param red: adjust color red.
+    :param green: adjust color green.
+    :param blue: adjust color blue.
+    '''
+
+    def __init__(self, image:str, red:int=5, green:int=5, blue:int=5):
+        self.image = image
+        self.red = red
+        self.green = green
+        self.blue = blue
+        
+
+        self.im = Image.open(self.image)
+
+        self.new_im = Image.new('RGB', self.im.size)
+
+        
+        width, height = self.im.size
+
+        for x in range(width):
+            for y in range(height):
+
+                px = self.im.getpixel((x,y))
+                
+                p_red = px[0]
+                p_green = px[1]
+                p_blue = px[2]
+
+                r = int(p_red * self.red)
+                g = int(p_green * self.green)
+                b = int(p_blue * self.blue)
+
+        
+        
+                self.new_im.putpixel((x,y),(r,g,b))
+
+
+    def save(self, path:str):
+        '''
+        Method responsible for saving the image with filter.
+        '''
+        self.new_im.save(path)
+
+    def show(self):
+        '''
+        Method responsible for showing the image with filter.
+        '''
+        self.new_im.show()
+
+class Clarendon:
+    '''
+    Class responsible for applying filter clarendon automatic.
+    :param src_image: Image to be applied to the filter.
+    :param dst_image: Image applicated filter.
+    '''
+
+    def __init__(self, src_image:str,dst_image):
+        self.src = src_image
+        self.dst = dst_image
+
+        IMBrightness(self.src, adjust=10).save(self.dst)
+        IMContrast(self.dst,adjust=10).save(self.dst)
+        IMSaturation(self.dst,adjust=25).save(self.dst)
+    
+class AditiveRed:
+    '''
+    Class responsible for applying filter aditive red automatic.
+    :param src_image: Image to be applied to the filter.
+    :param dst_image: Image applicated filter.
+    '''
+
+    def __init__(self, src_image:str,dst_image):
+        self.src = src_image
+        self.dst = dst_image
+
+        IMAditiveColors(self.src, red=50,green=0,blue=0).save(self.dst)
+
+class AditiveGreen:
+    '''
+    Class responsible for applying filter aditive green automatic.
+    :param src_image: Image to be applied to the filter.
+    :param dst_image: Image applicated filter.
+    '''
+
+    def __init__(self, src_image:str,dst_image):
+        self.src = src_image
+        self.dst = dst_image
+
+        IMAditiveColors(self.src, red=0,green=50,blue=0).save(self.dst)
+
+class AditiveBlue:
+    '''
+    Class responsible for applying filter aditive blue automatic.
+    :param src_image: Image to be applied to the filter.
+    :param dst_image: Image applicated filter.
+    '''
+
+    def __init__(self, src_image:str,dst_image):
+        self.src = src_image
+        self.dst = dst_image
+
+        IMAditiveColors(self.src, red=0,green=0,blue=50).save(self.dst)
+
+class GingHam:
+    '''
+    Class responsible for applying filter gingham automatic.
+    :param src_image: Image to be applied to the filter.
+    :param dst_image: Image applicated filter.
+    '''
+
+    def __init__(self, src_image:str,dst_image):
+        self.src = src_image
+        self.dst = dst_image
+
+        IMSepia(self.src,adjust=4).save(self.dst)
+        IMContrast(self.dst,adjust= -15).save(self.dst)
+
+class Moon:
+    '''
+    Class responsible for applying filter moon automatic.
+    :param src_image: Image to be applied to the filter.
+    :param dst_image: Image applicated filter.
+    '''
+
+    def __init__(self, src_image:str,dst_image):
+        self.src = src_image
+        self.dst = dst_image
+
+        IMGray(self.src,mode='optimize').save(self.dst)
+        IMContrast(self.dst,adjust= -4).save(self.dst)
+        IMBrightness(self.dst,adjust=10).save(self.dst)
+
+class Lark:
+    '''
+    Class responsible for applying filter lark automatic.
+    :param src_image: Image to be applied to the filter.
+    :param dst_image: Image applicated filter.
+    '''
+
+    def __init__(self, src_image:str,dst_image):
+        self.src = src_image
+        self.dst = dst_image
+
+        IMGray(self.src,mode='optimize').save(self.dst)
+        IMContrast(self.dst,adjust= -4).save(self.dst)
+        IMBrightness(self.dst,adjust=8).save(self.dst)
+
+class Reyes:
+    '''
+    Class responsible for applying filter reyes automatic.
+    :param src_image: Image to be applied to the filter.
+    :param dst_image: Image applicated filter.
+    '''
+
+    def __init__(self, src_image:str,dst_image):
+        self.src = src_image
+        self.dst = dst_image
+
+        IMSepia(self.src,adjust=40).save(self.dst)
+        IMContrast(self.dst,adjust= -5).save(self.dst)
+        IMBrightness(self.dst,adjust=13).save(self.dst)
+
+class Juno:
+    '''
+    Class responsible for applying filter juno automatic.
+    :param src_image: Image to be applied to the filter.
+    :param dst_image: Image applicated filter.
+    '''
+
+    def __init__(self, src_image:str,dst_image):
+        self.src = src_image
+        self.dst = dst_image
+
+        IMRgbScale(self.src,red=1.01, green=1.04, blue=1).save(self.dst)
+        IMSaturation(self.dst,adjust= 30).save(self.dst)
+
+class Slumber:
+    '''
+    Class responsible for applying filter slumber automatic.
+    :param src_image: Image to be applied to the filter.
+    :param dst_image: Image applicated filter.
+    '''
+
+    def __init__(self, src_image:str,dst_image):
+        self.src = src_image
+        self.dst = dst_image
+
+        IMBrightness(self.src,adjust=10).save(self.dst)
+        IMSaturation(self.dst,adjust= - 50).save(self.dst)
+
+class Rise:
+    '''
+    Class responsible for applying filter rise automatic.
+    :param src_image: Image to be applied to the filter.
+    :param dst_image: Image applicated filter.
+    '''
+
+    def __init__(self, src_image:str,dst_image):
+        self.src = src_image
+        self.dst = dst_image
+
+        IMBrightness(self.src,adjust=9).save(self.dst)
+        IMOverlay(self.dst,red=255,green=170,blue=0,scale=10)
+        IMSaturation(self.dst,adjust= 10).save(self.dst)
+
+class XPro2:
+    '''
+    Class responsible for applying filter xpro2 automatic.
+    :param src_image: Image to be applied to the filter.
+    :param dst_image: Image applicated filter.
+    '''
+
+    def __init__(self, src_image:str,dst_image):
+        self.src = src_image
+        self.dst = dst_image
+
+        IMContrast(self.src,adjust=15).save(self.dst)
+        IMOverlay(self.dst,red=255,green=255,blue=0,scale=7)
+        IMSaturation(self.dst,adjust= 20).save(self.dst)
+
+class Lofi:
+    '''
+    Class responsible for applying filter lofi automatic.
+    :param src_image: Image to be applied to the filter.
+    :param dst_image: Image applicated filter.
+    '''
+
+    def __init__(self, src_image:str,dst_image):
+        self.src = src_image
+        self.dst = dst_image
+
+        IMContrast(self.src,adjust=15).save(self.dst)
+        IMSaturation(self.dst,adjust= 20).save(self.dst)
+
+class Inkwell:
+    '''
+    Class responsible for applying filter inkwell automatic.
+    :param src_image: Image to be applied to the filter.
+    :param dst_image: Image applicated filter.
+    '''
+
+    def __init__(self, src_image:str,dst_image):
+        self.src = src_image
+        self.dst = dst_image
+
+        IMGray(self.src,mode='normal').save(self.dst)
+
+class Kelvin:
+    '''
+    Class responsible for applying filter kelvin automatic.
+    :param src_image: Image to be applied to the filter.
+    :param dst_image: Image applicated filter.
+    '''
+
+    def __init__(self, src_image:str,dst_image):
+        self.src = src_image
+        self.dst = dst_image
+
+        IMOverlay(self.src,red=250,green=140,blue=0,scale=0.1).save(self.dst)
+        IMRgbScale(self.dst,red=1.15,green=1.05,blue=1).save(self.dst)
+        IMSaturation(self.dst,adjust=35).save(self.dst)
+
+class F1977:
+    '''
+    Class responsible for applying filter f1977 automatic.
+    :param src_image: Image to be applied to the filter.
+    :param dst_image: Image applicated filter.
+    '''
+
+    def __init__(self, src_image:str,dst_image):
+        self.src = src_image
+        self.dst = dst_image
+
+        IMOverlay(self.src,red=250,green=25,blue=0,scale=0.15).save(self.dst)
+        IMBrightness(self.dst,adjust=10).save(self.dst)
+
+class Brooklyn:
+    '''
+    Class responsible for applying filter brooklyn automatic.
+    :param src_image: Image to be applied to the filter.
+    :param dst_image: Image applicated filter.
+    '''
+
+    def __init__(self, src_image:str,dst_image):
+        self.src = src_image
+        self.dst = dst_image
+
+        IMOverlay(self.src,red=25,green=240,blue=250,scale=0.05).save(self.dst)
+        IMSepia(self.dst,adjust=30).save(self.dst)
+        
+        
