@@ -9,8 +9,28 @@
 import math
 import os
 from random import randint, random
+import cv2
+import numpy as np
 
 from PIL import Image, ImageFilter, ImageGrab, ImageDraw
+
+class IMNormalize:
+    '''
+    Class responsible for normalized images.
+    : param image: Image to be applied to the filter.
+    '''
+    def __init__(self, image:str):
+        im = cv2.imread(image)
+        img_to_yuv = cv2.cvtColor(im,cv2.COLOR_BGR2YUV)
+        img_to_yuv[:,:,0] = cv2.equalizeHist(img_to_yuv[:,:,0])
+        self.im_result = cv2.cvtColor(img_to_yuv, cv2.COLOR_YUV2BGR)
+
+    def save(self, path:str):
+        '''
+        Method responsible for saving image.
+        : param path: Name of the file to be saved.
+        '''
+        cv2.imwrite(path,self.im_result)
 
 class IMBrightness:
     '''

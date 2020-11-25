@@ -5,13 +5,13 @@ with open("README.md", "r") as readme:
 
 setuptools.setup(
     name="imfilters", # Nome do Pacote
-    version="1.0.0",
+    version="1.0.1",
     author="Wellington Gadelha",
     author_email="contato.informeai@gmail.com",
     description="Pacote para tratamento e aplicação de filtros em imagens.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    install_requires=['Pillow'],
+    install_requires=['Pillow','opencv-python'],
     url="https://github.com/informeai/imfilters",
     packages=setuptools.find_packages(),
     classifiers=[

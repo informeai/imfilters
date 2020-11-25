@@ -1,5 +1,9 @@
 *.jpg
 *.png
 *.gif
+*.otf
+*.ttf
 main.py
 teste.py
+imfilters/utils.py
+imfilters/__pycache__
